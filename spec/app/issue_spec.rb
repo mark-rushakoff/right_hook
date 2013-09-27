@@ -7,10 +7,12 @@ describe CaptainHook::App do
 
     class IssueApp < CaptainHook::App
       class << self
-        attr_accessor :action, :issue_json
+        attr_accessor :owner, :repo_name, :action, :issue_json
       end
 
-      def on_issue(action, issue_json)
+      def on_issue(owner, repo_name, action, issue_json)
+        self.class.owner = owner
+        self.class.repo_name = repo_name
         self.class.action = action
         self.class.issue_json = issue_json
       end
@@ -21,7 +23,9 @@ describe CaptainHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/hook/issue', ISSUE_JSON
+      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON
+      expect(app.owner).to eq('mark-rushakoff')
+      expect(app.repo_name).to eq('captain_hook')
       expect(app.action).to eq('opened')
 
       # if it has one key it probably has them all

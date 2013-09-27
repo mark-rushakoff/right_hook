@@ -7,10 +7,12 @@ describe CaptainHook::App do
 
     class PullRequestApp < CaptainHook::App
       class << self
-        attr_accessor :action, :number, :pull_request_json
+        attr_accessor :owner, :repo_name, :action, :number, :pull_request_json
       end
 
-      def on_pull_request(action, number, pull_request_json)
+      def on_pull_request(owner, repo_name, action, number, pull_request_json)
+        self.class.owner = owner
+        self.class.repo_name = repo_name
         self.class.action = action
         self.class.number = number
         self.class.pull_request_json = pull_request_json
@@ -22,7 +24,9 @@ describe CaptainHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/hook/pull_request', PULL_REQUEST_JSON
+      post '/hook/mark-rushakoff/captain_hook/pull_request', PULL_REQUEST_JSON
+      expect(app.owner).to eq('mark-rushakoff')
+      expect(app.repo_name).to eq('captain_hook')
       expect(app.action).to eq('opened')
       expect(app.number).to eq(1)
 
