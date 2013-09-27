@@ -1,6 +1,6 @@
-# CaptainHook
+# Captain Hook
 
-TODO: Write a gem description
+Captain Hook simplifies setting up a web app to handle GitHub repo hooks.
 
 ## Installation
 
