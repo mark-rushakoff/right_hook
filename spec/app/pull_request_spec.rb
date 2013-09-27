@@ -5,26 +5,29 @@ describe CaptainHook::App do
   describe 'Pull requests' do
     include Rack::Test::Methods
 
-    TEST_OUTPUT = {}
+    class PullRequestApp < CaptainHook::App
+      class << self
+        attr_accessor :action, :number, :pull_request_json
+      end
 
-    def app
-      Class.new(CaptainHook::App) do
-        def on_pull_request(action, number, pull_request_json)
-          # there has to be a better way to test this
-          TEST_OUTPUT[:action] = action
-          TEST_OUTPUT[:number] = number
-          TEST_OUTPUT[:pull_request_json] = pull_request_json
-        end
+      def on_pull_request(action, number, pull_request_json)
+        self.class.action = action
+        self.class.number = number
+        self.class.pull_request_json = pull_request_json
       end
     end
 
+    def app
+      PullRequestApp
+    end
+
     it 'captures the interesting data' do
-      post '/github_hook', PULL_REQUEST_JSON
-      expect(TEST_OUTPUT[:action]).to eq('opened')
-      expect(TEST_OUTPUT[:number]).to eq(1)
+      post '/hook/pull_request', PULL_REQUEST_JSON
+      expect(app.action).to eq('opened')
+      expect(app.number).to eq(1)
 
       # if it has one key it probably has them all
-      expect(TEST_OUTPUT[:pull_request_json]['body']).to eq('Please pull these awesome changes')
+      expect(app.pull_request_json['body']).to eq('Please pull these awesome changes')
     end
   end
 end
