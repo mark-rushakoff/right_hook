@@ -3,21 +3,20 @@ require 'json'
 
 module CaptainHook
   class App < Sinatra::Base
-    post '/hook/:owner/:repo_name/pull_request' do
+    post '/hook/:owner/:repo_name/:event_type' do
+      owner = params[:owner]
+      repo_name = params[:repo_name]
+      event_type = params[:event_type]
       content = request.body.read
-      require_valid_signature(content, params[:owner], params[:repo_name], :pull_request)
+      require_valid_signature(content, owner, repo_name, event_type)
 
       json = JSON.parse(content)
-      on_pull_request(params[:owner], params[:repo_name], json['action'], json['number'], json['pull_request'])
-    end
-
-    post '/hook/:owner/:repo_name/issue' do
-      content = request.body.read
-
-      require_valid_signature(content, params[:owner], params[:repo_name], :issue)
-      json = JSON.parse(content)
-
-      on_issue(params[:owner], params[:repo_name], json['action'], json['issue'])
+      case event_type
+      when 'pull_request'
+        on_pull_request(owner, repo_name, json['action'], json['number'], json['pull_request'])
+      when 'issue'
+        on_issue(owner, repo_name, json['action'], json['issue'])
+      end
     end
 
     def require_valid_signature(content, owner, repo_name, event_type)

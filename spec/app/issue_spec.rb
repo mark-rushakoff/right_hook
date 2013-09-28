@@ -18,7 +18,7 @@ describe CaptainHook::App do
       end
 
       def secret(owner, repo_name, event_type)
-        'issue' if owner == 'mark-rushakoff' && repo_name == 'captain_hook' && event_type == :issue
+        'issue' if owner == 'mark-rushakoff' && repo_name == 'captain_hook' && event_type == 'issue'
       end
     end
 
