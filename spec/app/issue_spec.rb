@@ -16,20 +16,35 @@ describe CaptainHook::App do
         self.class.action = action
         self.class.issue_json = issue_json
       end
+
+      def secret(owner, repo_name, event_type)
+        'issue' if owner == 'mark-rushakoff' && repo_name == 'captain_hook' && event_type == :issue
+      end
     end
 
     def app
       IssueApp
     end
 
+    before do
+      app.owner = app.repo_name = app.action = app.issue_json = nil
+    end
+
     it 'captures the interesting data' do
-      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON
+      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON, generate_secret_header('issue', ISSUE_JSON)
+      expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
       expect(app.repo_name).to eq('captain_hook')
       expect(app.action).to eq('opened')
 
       # if it has one key it probably has them all
       expect(app.issue_json['title']).to eq('Found a bug')
+    end
+
+    it 'fails when the secret is wrong' do
+      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON, generate_secret_header('wrong', ISSUE_JSON)
+      expect(last_response.status).to eq(202)
+      expect(app.owner).to be_nil
     end
   end
 end
