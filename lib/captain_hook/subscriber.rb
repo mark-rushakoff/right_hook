@@ -1,24 +1,52 @@
 require 'httparty'
 
 module CaptainHook
+  # Subscriber can subscribe and unsubscribe GitHub hooks to a hosted instance of a CaptainHook::App.
   class Subscriber
-    attr_reader :base_url, :oauth_token
+    # The base URL for the binding, i.e. where your CaptainHook::App is hosted.
+    attr_accessor :base_url
 
-    def initialize(base_url, oauth_token)
-      @base_url = base_url
-      @oauth_token = oauth_token
+    # The OAuth token to use for authenticating with GitHub.
+    # The token must belong to an account that has the +repo+ scope and collaborator privilege on the given repository.
+    attr_accessor :oauth_token
+
+    # The owner of the named repository.
+    attr_accessor :owner
+
+    # The event type of the hook.
+    # See http://developer.github.com/v3/repos/hooks/ for a complete list of valid types.
+    attr_accessor :event_type
+
+    # Initialize takes options which will be used as default values in other methods.
+    # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, and +event_type+].
+    def initialize(default_opts = {})
+      @base_url = default_opts[:base_url]
+      @oauth_token = default_opts[:oauth_token]
+      @owner = default_opts[:owner]
+      @event_type = default_opts[:event_type]
     end
 
-    def subscribe!(owner, repo_name, event_type, secret)
-      hub_request_with_mode('subscribe', owner, repo_name, event_type, secret)
+    # Subscribe a CaptainHook::App hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
+    # +repo_name+ and +secret+ are required options and they are intentionally not stored as defaults on the +Subscriber+ instance.
+    def subscribe(opts)
+      hub_request_with_mode('subscribe', opts)
     end
 
-    def unsubscribe!(owner, repo_name, event_type, secret)
-      hub_request_with_mode('unsubscribe', owner, repo_name, event_type, secret)
+    # Unsubscribe a CaptainHook::App hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
+    # +repo_name+ and +secret+ are required options and they are intentionally not stored as defaults on the +Subscriber+ instance.
+    # (NB: It's possible that GitHub's API *doesn't* require secret; I haven't checked.)
+    def unsubscribe(opts)
+      hub_request_with_mode('unsubscribe', opts)
     end
 
     private
-    def hub_request_with_mode(mode, owner, repo_name, event_type, secret)
+    def hub_request_with_mode(mode, opts)
+      repo_name = opts.fetch(:repo_name) # explicitly not defaulted
+      secret = opts.fetch(:secret) # explicitly not defaulted
+      oauth_token = opts.fetch(:oauth_token) { self.oauth_token }
+      owner = opts.fetch(:owner) { self.owner }
+      base_url = opts.fetch(:base_url) { self.base_url }
+
       HTTParty.post('https://api.github.com/hub',
         headers: {
           # http://developer.github.com/v3/#authentication

@@ -1,6 +1,15 @@
 require 'spec_helper'
 
 describe CaptainHook::Subscriber do
+  subject(:subscriber) do
+    described_class.new(
+      oauth_token: 'my_token',
+      owner: 'mark-rushakoff',
+      base_url: 'http://example.com',
+      event_type: 'issue',
+    )
+  end
+
   describe '.subscribe' do
     let!(:stubbed_request) do
       stub_request(:post, 'https://api.github.com/hub').
@@ -9,12 +18,10 @@ describe CaptainHook::Subscriber do
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
-    subject(:subscriber) { described_class.new('http://example.com', 'my_token') }
-
     context 'When the request succeeds' do
       let(:status_code) { 200 }
       it 'returns true' do
-        result = subscriber.subscribe!('mark-rushakoff', 'captain_hook', 'issue', 'the-secret')
+        result = subscriber.subscribe(repo_name: 'captain_hook', secret: 'the-secret')
         expect(result).to eq(true)
 
         expect(stubbed_request).to have_been_requested
@@ -24,7 +31,7 @@ describe CaptainHook::Subscriber do
     context 'When the request fails' do
       let(:status_code) { 404 }
       it 'returns false' do
-        result = subscriber.subscribe!('mark-rushakoff', 'captain_hook', 'issue', 'the-secret')
+        result = subscriber.subscribe(repo_name: 'captain_hook', secret: 'the-secret')
         expect(result).to eq(false)
 
         expect(stubbed_request).to have_been_requested
@@ -40,12 +47,11 @@ describe CaptainHook::Subscriber do
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
-    subject(:subscriber) { described_class.new('http://example.com', 'my_token') }
 
     context 'When the request succeeds' do
       let(:status_code) { 200 }
       it 'returns true' do
-        result = subscriber.unsubscribe!('mark-rushakoff', 'captain_hook', 'issue', 'the-secret')
+        result = subscriber.unsubscribe(repo_name: 'captain_hook', secret: 'the-secret')
         expect(result).to eq(true)
 
         expect(stubbed_request).to have_been_requested
@@ -55,7 +61,7 @@ describe CaptainHook::Subscriber do
     context 'When the request fails' do
       let(:status_code) { 404 }
       it 'returns false' do
-        result = subscriber.unsubscribe!('mark-rushakoff', 'captain_hook', 'issue', 'the-secret')
+        result = subscriber.unsubscribe(repo_name: 'captain_hook', secret: 'the-secret')
         expect(result).to eq(false)
 
         expect(stubbed_request).to have_been_requested

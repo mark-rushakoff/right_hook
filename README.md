@@ -18,7 +18,49 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### GitHub Authentication
+
+To create hooks on GitHub repositories, you need to be authenticated as a collaborator on that repository.
+GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Captain Hook to set up custom hooks.
+
+Captain Hook never stores your password.
+He always uses OAuth tokens.
+The only time he asks for your password is when he is creating a new token or listing existing tokens.
+
+Captain Hook doesn't store your tokens, either.
+It's your duty to manage storage of tokens.
+
+### Subscribing to Hooks
+
+Captain Hook provides a way to subscribe to hooks.
+It's easy!
+
+```ruby
+require 'captain_hook'
+
+default_opts = {
+  base_url: "http://captain-hook.example.com",
+  oauth_token: ENV['CAPTAIN_HOOK_TOKEN']
+}
+
+subscriber = CaptainHook::Subscriber.new(default_opts)
+
+subscriber.subscribe(
+  owner: 'octocat',
+  repo_name: 'Hello-World',
+  event_type: 'pull_request',
+  secret: 'secret_for_hello_world'
+)
+
+subscriber.subscribe(
+  owner: 'octocat',
+  repo_name: 'Spoon-Knife',
+  event_type: 'issue',
+  secret: 'secret_for_spoon_knife'
+)
+```
+
+(For more details, consult the RDoc documentation.)
 
 ## Contributing
 
