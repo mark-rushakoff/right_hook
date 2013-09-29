@@ -30,6 +30,7 @@ module CaptainHook
       end
     end
 
+    private
     def require_valid_signature(content, owner, repo_name, event_type)
       s = secret(owner, repo_name, event_type)
       expected_signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::Digest.new('sha1'), s, content)
