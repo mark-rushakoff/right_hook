@@ -34,6 +34,41 @@ The only time he asks for your password is when he is creating a new token or li
 Captain Hook doesn't store your tokens, either.
 It's your duty to manage storage of tokens.
 
+### Your App
+
+Create an application by subclassing `CaptainHook::App`:
+
+```ruby
+# app.rb
+require 'captain_hook/app'
+
+class MyApp < CaptainHook::App
+  # You must supply a secret for each repository and hook.
+  # The secret should only be known by GitHub; that's how we know the request is coming from GitHub's servers.
+  # (You'll specify that secret when you go through subscription, in the next section.)
+  def secret(owner, repo_name, event_type)
+    if owner == 'octocat' && repo_name == 'Spoon-Fork' && event_type == 'pull_request'
+      'qwertyuiop'
+    else
+      raise 'unrecognized!'
+    end
+  end
+
+  # Code to execute for GitHub's pull request hook.
+  # The secret has already been verified if your code is being called.
+  # See app.rb and spec/app/*_spec.rb for signatures and examples of the valid handlers.
+  def on_pull_request(owner, repo_name, action, number, pull_request_json)
+    message = <<-MSG
+      GitHub user #{pull_request_json['user']['login']} has opened pull request ##{number}
+      on repository #{owner}/#{repo_name}!
+    MSG
+    send_text_message(MY_PHONE_NUMBER, message) # or whatever you want
+  end
+end
+```
+
+You'll need to host your app online and hold on to the base URL so you can subscribe to hooks.
+
 ### Subscribing to Hooks
 
 Captain Hook provides a way to subscribe to hooks.
