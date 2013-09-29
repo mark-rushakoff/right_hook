@@ -7,6 +7,9 @@ require_relative './support/spec_helpers.rb'
 
 require 'webmock/rspec'
 
+require 'coveralls'
+Coveralls.wear!
+
 RSpec.configure do |c|
   c.include CaptainHook::SpecHelpers
 end

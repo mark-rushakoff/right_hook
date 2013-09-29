@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mark-rushakoff/captain_hook.png?branch=master)](https://travis-ci.org/mark-rushakoff/captain_hook)
 [![Code Climate](https://codeclimate.com/github/mark-rushakoff/captain_hook.png)](https://codeclimate.com/github/mark-rushakoff/captain_hook)
+[![Coverage Status](https://coveralls.io/repos/mark-rushakoff/captain_hook/badge.png)](https://coveralls.io/r/mark-rushakoff/captain_hook)
 
 Captain Hook simplifies setting up a web app to handle GitHub repo hooks.
 

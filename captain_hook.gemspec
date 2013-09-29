@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2.14"
   spec.add_development_dependency "rack-test"
   spec.add_development_dependency "webmock", "~> 1.13"
+  spec.add_development_dependency "coveralls"
 
   spec.add_runtime_dependency "sinatra", "~> 1.4"
   spec.add_runtime_dependency "httparty", "~> 0.11.0"
