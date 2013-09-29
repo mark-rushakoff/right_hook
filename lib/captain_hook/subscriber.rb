@@ -1,9 +1,10 @@
 require 'httparty'
 
 module CaptainHook
-  # Subscriber can subscribe and unsubscribe GitHub hooks to a hosted instance of a CaptainHook::App.
+  # Subscriber can subscribe and unsubscribe GitHub hooks to a hosted instance of a specified {CaptainHook::App}.
+  # See the README for sample usage.
   class Subscriber
-    # The base URL for the binding, i.e. where your CaptainHook::App is hosted.
+    # The base URL for the binding (where your {CaptainHook::App} is hosted).
     attr_accessor :base_url
 
     # The OAuth token to use for authenticating with GitHub.
@@ -26,15 +27,17 @@ module CaptainHook
       @event_type = default_opts[:event_type]
     end
 
-    # Subscribe a CaptainHook::App hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
+    # Subscribe an instance of {CaptainHook::App} hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
     # +repo_name+ and +secret+ are required options and they are intentionally not stored as defaults on the +Subscriber+ instance.
+    # @return [bool success] Whether the request was successful.
     def subscribe(opts)
       hub_request_with_mode('subscribe', opts)
     end
 
-    # Unsubscribe a CaptainHook::App hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
+    # Unsubscribe an instance of {CaptainHook::App} hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
     # +repo_name+ and +secret+ are required options and they are intentionally not stored as defaults on the +Subscriber+ instance.
     # (NB: It's possible that GitHub's API *doesn't* require secret; I haven't checked.)
+    # @return [bool success] Whether the request was successful.
     def unsubscribe(opts)
       hub_request_with_mode('unsubscribe', opts)
     end
