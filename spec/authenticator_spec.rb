@@ -29,7 +29,7 @@ describe RightHook::Authenticator do
 
   describe '#list_authorizations' do
     it 'delegates to list_authorizations' do
-      Octokit::Client.any_instance.should_receive(:list_authorizations).and_return(:the_authorizations)
+      Octokit::Client.any_instance.should_receive(:authorizations).and_return(:the_authorizations)
 
       expect(described_class.build('octocat', 'pass').list_authorizations).to eq(:the_authorizations)
     end
