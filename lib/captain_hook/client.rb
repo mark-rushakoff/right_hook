@@ -1,0 +1,37 @@
+module CaptainHook
+  # The client provides interactions with GitHub API.
+  class Client
+    class << self
+      # Build a client with a username and an explicit password.
+      def build(username, password)
+        new(Octokit::Client.new(login: username, password: password))
+      end
+
+      # Prompt the user for their password (without displaying the entered keys).
+      # This approach is offered for convenience to make it easier to not store passwords on disk.
+      def interactive_build(username)
+        new(Octokit::Client.new(login: username, password: $stdin.noecho(&:gets).chomp))
+      end
+    end
+
+    # :nodoc:
+    def initialize(_client)
+      @_client = _client
+    end
+
+    # Create a new GitHub authorization with the given note.
+    def create_authorization(note)
+      _client.create_authorization(scopes: %w(repo), note: note)
+    end
+
+    # Returns an array of all of the authorizations for the authenticated account.
+    def list_authorizations
+      _client.list_authorizations
+    end
+
+    private
+    attr_reader :_client
+    # Enforce use of build methods
+    private_class_method :new
+  end
+end
