@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = RightHook::VERSION
   spec.authors       = ["Mark Rushakoff"]
   spec.email         = ["mark.rushakoff@gmail.com"]
-  spec.description   = %q{A simple sinatra app ready to go for GitHub service hooks.}
+  spec.description   = %q{A collection of tools for making web apps that respond to GitHub hooks.}
   spec.summary       = %q{Right Hook is a foundation to use when you just want to write a GitHub service hook.}
   spec.homepage      = "https://github.com/mark-rushakoff/right_hook"
   spec.license       = "MIT"
