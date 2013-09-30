@@ -64,7 +64,7 @@ module RightHook
         }
       )
 
-      RightHook.logger.warn("Failure modifying subscription: #{response.body.inspect}") unless response.success?
+      RightHook.logger.warn("Failure modifying subscription: #{response.inspect}") unless response.success?
 
       response.success?
     end
