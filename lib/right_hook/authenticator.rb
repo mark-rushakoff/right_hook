@@ -1,3 +1,5 @@
+require 'octokit'
+
 module RightHook
   # The authenticator provides an interface to retrieving or creating GitHub authorizations.
   class Authenticator
