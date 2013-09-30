@@ -1,7 +1,7 @@
 require 'sinatra/base'
 require 'json'
 
-module CaptainHook
+module RightHook
   class App < Sinatra::Base
     KNOWN_EVENT_TYPES = %w(
       pull_request

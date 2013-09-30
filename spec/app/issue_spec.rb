@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe CaptainHook::App do
+describe RightHook::App do
   describe 'Issues' do
     include Rack::Test::Methods
 
-    class IssueApp < CaptainHook::App
+    class IssueApp < RightHook::App
       class << self
         attr_accessor :owner, :repo_name, :action, :issue_json
       end
@@ -18,7 +18,7 @@ describe CaptainHook::App do
       end
 
       def secret(owner, repo_name, event_type)
-        'issue' if owner == 'mark-rushakoff' && repo_name == 'captain_hook' && event_type == 'issue'
+        'issue' if owner == 'mark-rushakoff' && repo_name == 'right_hook' && event_type == 'issue'
       end
     end
 
@@ -31,10 +31,10 @@ describe CaptainHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON, generate_secret_header('issue', ISSUE_JSON)
+      post '/hook/mark-rushakoff/right_hook/issue', ISSUE_JSON, generate_secret_header('issue', ISSUE_JSON)
       expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
-      expect(app.repo_name).to eq('captain_hook')
+      expect(app.repo_name).to eq('right_hook')
       expect(app.action).to eq('opened')
 
       # if it has one key it probably has them all
@@ -42,7 +42,7 @@ describe CaptainHook::App do
     end
 
     it 'fails when the secret is wrong' do
-      post '/hook/mark-rushakoff/captain_hook/issue', ISSUE_JSON, generate_secret_header('wrong', ISSUE_JSON)
+      post '/hook/mark-rushakoff/right_hook/issue', ISSUE_JSON, generate_secret_header('wrong', ISSUE_JSON)
       expect(last_response.status).to eq(202)
       expect(app.owner).to be_nil
     end

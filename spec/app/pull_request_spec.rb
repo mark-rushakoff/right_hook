@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe CaptainHook::App do
+describe RightHook::App do
   describe 'Pull requests' do
     include Rack::Test::Methods
 
-    class PullRequestApp < CaptainHook::App
+    class PullRequestApp < RightHook::App
       class << self
         attr_accessor :owner, :repo_name, :action, :number, :pull_request_json
       end
@@ -19,7 +19,7 @@ describe CaptainHook::App do
       end
 
       def secret(owner, repo_name, event_type)
-        'pull_request' if owner == 'mark-rushakoff' && repo_name == 'captain_hook' && event_type == 'pull_request'
+        'pull_request' if owner == 'mark-rushakoff' && repo_name == 'right_hook' && event_type == 'pull_request'
       end
     end
 
@@ -32,10 +32,10 @@ describe CaptainHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/hook/mark-rushakoff/captain_hook/pull_request', PULL_REQUEST_JSON, generate_secret_header('pull_request', PULL_REQUEST_JSON)
+      post '/hook/mark-rushakoff/right_hook/pull_request', PULL_REQUEST_JSON, generate_secret_header('pull_request', PULL_REQUEST_JSON)
       expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
-      expect(app.repo_name).to eq('captain_hook')
+      expect(app.repo_name).to eq('right_hook')
       expect(app.action).to eq('opened')
       expect(app.number).to eq(1)
 
@@ -44,7 +44,7 @@ describe CaptainHook::App do
     end
 
     it 'fails when the secret is wrong' do
-      post '/hook/mark-rushakoff/captain_hook/pull_request', PULL_REQUEST_JSON, generate_secret_header('wrong', PULL_REQUEST_JSON)
+      post '/hook/mark-rushakoff/right_hook/pull_request', PULL_REQUEST_JSON, generate_secret_header('wrong', PULL_REQUEST_JSON)
       expect(last_response.status).to eq(202)
       expect(app.owner).to be_nil
     end

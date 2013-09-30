@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CaptainHook::Commenter do
+describe RightHook::Commenter do
   subject(:commenter) do
     described_class.new('a_token')
   end

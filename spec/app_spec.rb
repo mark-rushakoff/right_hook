@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'rack/test'
 
-describe CaptainHook::App do
+describe RightHook::App do
   include Rack::Test::Methods
 
-  class BareApp < CaptainHook::App
+  class BareApp < RightHook::App
     def secret(owner, repo_name, event_type)
       ''
     end
@@ -15,12 +15,12 @@ describe CaptainHook::App do
   end
 
   it 'is status 501 for a non-implemented hook' do
-    post '/hook/mark-rushakoff/captain_hook/issue', '{}', generate_secret_header('secret', '{}')
+    post '/hook/mark-rushakoff/right_hook/issue', '{}', generate_secret_header('secret', '{}')
     expect(last_response.status).to eq(501)
   end
 
   it 'is 404 for an unknown hook' do
-    post '/hook/mark-rushakoff/captain_hook/foobar', '{}', generate_secret_header('secret', '{}')
+    post '/hook/mark-rushakoff/right_hook/foobar', '{}', generate_secret_header('secret', '{}')
     expect(last_response.status).to eq(404)
   end
 end

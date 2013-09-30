@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CaptainHook::AuthenticatedClient do
+describe RightHook::AuthenticatedClient do
   describe '.new' do
     it 'creates an Octokit client with the given token' do
       Octokit::Client.should_receive(:new).with(access_token: 'the_token')

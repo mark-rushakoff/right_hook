@@ -1,16 +1,16 @@
-# Captain Hook
+# Right Hook
 
-[![Build Status](https://travis-ci.org/mark-rushakoff/captain_hook.png?branch=master)](https://travis-ci.org/mark-rushakoff/captain_hook)
-[![Code Climate](https://codeclimate.com/github/mark-rushakoff/captain_hook.png)](https://codeclimate.com/github/mark-rushakoff/captain_hook)
-[![Coverage Status](https://coveralls.io/repos/mark-rushakoff/captain_hook/badge.png)](https://coveralls.io/r/mark-rushakoff/captain_hook)
+[![Build Status](https://travis-ci.org/mark-rushakoff/right_hook.png?branch=master)](https://travis-ci.org/mark-rushakoff/right_hook)
+[![Code Climate](https://codeclimate.com/github/mark-rushakoff/right_hook.png)](https://codeclimate.com/github/mark-rushakoff/right_hook)
+[![Coverage Status](https://coveralls.io/repos/mark-rushakoff/right_hook/badge.png)](https://coveralls.io/r/mark-rushakoff/right_hook)
 
-Captain Hook is a collection of tools to aid in setting up a web app to handle GitHub repo hooks.
+Right Hook is a collection of tools to aid in setting up a web app to handle GitHub repo hooks.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'captain_hook'
+    gem 'right_hook'
 
 And then execute:
 
@@ -18,19 +18,19 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install captain_hook
+    $ gem install right_hook
 
 ## Usage
 
 ### Your App
 
-Create an application by subclassing `CaptainHook::App`:
+Create an application by subclassing `RightHook::App`:
 
 ```ruby
 # app.rb
-require 'captain_hook/app'
+require 'right_hook/app'
 
-class MyApp < CaptainHook::App
+class MyApp < RightHook::App
   # You must supply a secret for each repository and hook.
   # The secret should only be known by GitHub; that's how we know the request is coming from GitHub's servers.
   # (You'll specify that secret when you go through subscription.)
@@ -60,25 +60,25 @@ You'll need to host your app online and hold on to the base URL so you can subsc
 ### GitHub Authentication
 
 To create hooks on GitHub repositories, you need to be authenticated as a collaborator on that repository.
-GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Captain Hook to set up custom hooks.
+GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Right Hook to set up custom hooks.
 
-Captain Hook never stores your password.
+Right Hook never stores your password.
 He always uses OAuth tokens.
 The only time he asks for your password is when he is creating a new token or listing existing tokens.
 
-Captain Hook doesn't store your tokens, either.
+Right Hook doesn't store your tokens, either.
 It's your duty to manage storage of tokens.
 
 Here's one way you can generate and list tokens:
 
 ```ruby
-require 'captain_hook/authenticator'
+require 'right_hook/authenticator'
 
 puts "Please enter your username:"
 username = $stdin.gets
 
 # Prompt the user for their password, without displaying it in the terminal
-authenticator = CaptainHook::Client.interactive_build(username)
+authenticator = RightHook::Client.interactive_build(username)
 
 # Note for the token (this will be displayed in the user's settings on GitHub)
 note = "Created in my awesome script"
@@ -91,18 +91,18 @@ end
 
 ### Subscribing to Hooks
 
-Captain Hook provides a way to subscribe to hooks.
+Right Hook provides a way to subscribe to hooks.
 It's easy!
 
 ```ruby
-require 'captain_hook/subscriber'
+require 'right_hook/subscriber'
 
 default_opts = {
-  base_url: "http://captain-hook.example.com",
-  oauth_token: ENV['CAPTAIN_HOOK_TOKEN']
+  base_url: "http://right-hook.example.com",
+  oauth_token: ENV['RIGHT_HOOK_TOKEN']
 }
 
-subscriber = CaptainHook::Subscriber.new(default_opts)
+subscriber = RightHook::Subscriber.new(default_opts)
 
 subscriber.subscribe(
   owner: 'octocat',

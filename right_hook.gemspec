@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'captain_hook/version'
+require 'right_hook/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "captain_hook"
-  spec.version       = CaptainHook::VERSION
+  spec.name          = "right_hook"
+  spec.version       = RightHook::VERSION
   spec.authors       = ["Mark Rushakoff"]
   spec.email         = ["mark.rushakoff@gmail.com"]
   spec.description   = %q{A simple sinatra app ready to go for GitHub service hooks.}
-  spec.summary       = %q{Captain Hook is a foundation to use when you just want to write a GitHub service hook.}
-  spec.homepage      = "https://github.com/mark-rushakoff/captain_hook"
+  spec.summary       = %q{Right Hook is a foundation to use when you just want to write a GitHub service hook.}
+  spec.homepage      = "https://github.com/mark-rushakoff/right_hook"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

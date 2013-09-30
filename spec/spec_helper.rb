@@ -1,10 +1,10 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'captain_hook'
-require 'captain_hook/app'
-require 'captain_hook/authenticated_client'
-require 'captain_hook/authenticator'
-require 'captain_hook/commenter'
-require 'captain_hook/subscriber'
+require 'right_hook'
+require 'right_hook/app'
+require 'right_hook/authenticated_client'
+require 'right_hook/authenticator'
+require 'right_hook/commenter'
+require 'right_hook/subscriber'
 
 require_relative './support/spec_helpers.rb'
 
@@ -14,5 +14,5 @@ require 'coveralls'
 Coveralls.wear!
 
 RSpec.configure do |c|
-  c.include CaptainHook::SpecHelpers
+  c.include RightHook::SpecHelpers
 end
