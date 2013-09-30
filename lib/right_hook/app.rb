@@ -3,27 +3,22 @@ require 'json'
 
 module RightHook
   class App < Sinatra::Base
-    KNOWN_EVENT_TYPES = %w(
-      pull_request
-      issue
-    )
-
     post '/hook/:owner/:repo_name/:event_type' do
       owner = params[:owner]
       repo_name = params[:repo_name]
       event_type = params[:event_type]
       content = request.body.read
 
-      halt 404 unless KNOWN_EVENT_TYPES.include?(event_type)
+      halt 404 unless Event::KNOWN_TYPES.include?(event_type)
       halt 501 unless respond_to?("on_#{event_type}")
 
       require_valid_signature(content, owner, repo_name, event_type)
 
       json = JSON.parse(content)
       case event_type
-      when 'pull_request'
+      when Event::PULL_REQUEST
         on_pull_request(owner, repo_name, json['number'], json['action'], json['pull_request'])
-      when 'issue'
+      when Event::ISSUE
         on_issue(owner, repo_name, json['action'], json['issue'])
       else
         halt 500
