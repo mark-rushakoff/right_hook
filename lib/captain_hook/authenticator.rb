@@ -20,8 +20,9 @@ module CaptainHook
     end
 
     # Create a new GitHub authorization with the given note.
+    # If one already exists with that note, it will not create a duplicate.
     def create_authorization(note)
-      _client.create_authorization(scopes: %w(repo), note: note)
+      _client.create_authorization(scopes: %w(repo), note: note, idempotent: true).token
     end
 
     # Returns an array of all of the authorizations for the authenticated account.

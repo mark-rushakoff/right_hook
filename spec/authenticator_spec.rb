@@ -21,9 +21,9 @@ describe CaptainHook::Authenticator do
 
   describe '#create_authorization' do
     it 'delegates to create_authorization' do
-      Octokit::Client.any_instance.should_receive(:create_authorization).with(scopes: %w(repo), note: 'test note')
+      Octokit::Client.any_instance.should_receive(:create_authorization).with(scopes: %w(repo), note: 'test note', idempotent: true).and_return(OpenStruct.new(token: 'my_token'))
 
-      CaptainHook::Authenticator.build('octocat', 'pass').create_authorization('test note')
+      expect(CaptainHook::Authenticator.build('octocat', 'pass').create_authorization('test note')).to eq('my_token')
     end
   end
 
