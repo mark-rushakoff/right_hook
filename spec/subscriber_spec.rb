@@ -37,6 +37,24 @@ describe RightHook::Subscriber do
         expect(stubbed_request).to have_been_requested
       end
     end
+
+    context 'When everything is overridden' do
+      let(:status_code) { 200 }
+      it 'works' do
+        s = described_class.new
+        result = s.subscribe(
+          repo_name: 'right_hook',
+          secret: 'the-secret',
+          oauth_token: 'my_token',
+          owner: 'mark-rushakoff',
+          base_url: 'http://example.com',
+          event_type: 'issue'
+        )
+        expect(result).to eq(true)
+
+        expect(stubbed_request).to have_been_requested
+      end
+    end
   end
 
   describe '.unsubscribe' do

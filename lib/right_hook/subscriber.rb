@@ -50,6 +50,7 @@ module RightHook
       oauth_token = opts.fetch(:oauth_token) { self.oauth_token }
       owner = opts.fetch(:owner) { self.owner }
       base_url = opts.fetch(:base_url) { self.base_url }
+      event_type = opts.fetch(:event_type) { self.event_type }
 
       response = HTTParty.post('https://api.github.com/hub',
         headers: {
