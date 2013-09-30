@@ -1,4 +1,5 @@
 require 'httparty'
+require 'right_hook/logger'
 
 module RightHook
   # Subscriber can subscribe and unsubscribe GitHub hooks to a hosted instance of a specified {RightHook::App}.
@@ -50,7 +51,7 @@ module RightHook
       owner = opts.fetch(:owner) { self.owner }
       base_url = opts.fetch(:base_url) { self.base_url }
 
-      HTTParty.post('https://api.github.com/hub',
+      response = HTTParty.post('https://api.github.com/hub',
         headers: {
           # http://developer.github.com/v3/#authentication
           'Authorization' => "token #{oauth_token}"
@@ -61,7 +62,11 @@ module RightHook
           'hub.callback' => "#{base_url}/hook/#{owner}/#{repo_name}/#{event_type}",
           'hub.secret' => secret
         }
-      ).success?
+      )
+
+      RightHook.logger.warn("Failure modifying subscription: #{response.body.inspect}") unless response.success?
+
+      response.success?
     end
   end
 end
