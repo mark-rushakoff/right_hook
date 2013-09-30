@@ -4,6 +4,7 @@ require 'right_hook/app'
 require 'right_hook/authenticated_client'
 require 'right_hook/authenticator'
 require 'right_hook/commenter'
+require 'right_hook/event'
 require 'right_hook/subscriber'
 
 require_relative './support/spec_helpers.rb'

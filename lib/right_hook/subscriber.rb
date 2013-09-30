@@ -1,4 +1,5 @@
 require 'httparty'
+require 'right_hook/event'
 require 'right_hook/logger'
 
 module RightHook
@@ -59,7 +60,7 @@ module RightHook
         },
         body: {
           'hub.mode' => mode,
-          'hub.topic' => "https://github.com/#{owner}/#{repo_name}/events/#{event_type}",
+          'hub.topic' => "https://github.com/#{owner}/#{repo_name}/events/#{Event.github_name(event_type)}",
           'hub.callback' => "#{base_url}/hook/#{owner}/#{repo_name}/#{event_type}",
           'hub.secret' => secret
         }
