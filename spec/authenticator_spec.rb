@@ -38,7 +38,7 @@ describe RightHook::Authenticator do
   describe '#find_or_create_authorization_by_note' do
     let(:auth) { OpenStruct.new(token: 'a token', note: 'the note')}
     context 'when #list_authorizations has a note that is an exact match' do
-      before { Octokit::Client.any_instance.should_receive(:list_authorizations).and_return([auth]) }
+      before { Octokit::Client.any_instance.should_receive(:authorizations).and_return([auth]) }
       it 'returns that authorization' do
         authenticator = described_class.build('octocat', 'pass')
         expect(authenticator.find_or_create_authorization_by_note('the note')).to eq('a token')
@@ -46,7 +46,7 @@ describe RightHook::Authenticator do
     end
 
     context 'when #list_authorizations does not have a note that matches' do
-      before { Octokit::Client.any_instance.should_receive(:list_authorizations).and_return([]) }
+      before { Octokit::Client.any_instance.should_receive(:authorizations).and_return([]) }
       before { Octokit::Client.any_instance.should_receive(:create_authorization).and_return(auth) }
       it 'creates a new authorization' do
         authenticator = described_class.build('octocat', 'pass')

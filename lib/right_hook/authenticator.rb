@@ -30,7 +30,7 @@ module RightHook
 
     # Returns an array of all of the authorizations for the authenticated account.
     def list_authorizations
-      _client.list_authorizations
+      _client.authorizations
     end
 
     # If there is already an authorization by this note, use it; otherwise create it
