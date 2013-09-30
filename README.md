@@ -4,7 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/mark-rushakoff/captain_hook.png)](https://codeclimate.com/github/mark-rushakoff/captain_hook)
 [![Coverage Status](https://coveralls.io/repos/mark-rushakoff/captain_hook/badge.png)](https://coveralls.io/r/mark-rushakoff/captain_hook)
 
-Captain Hook simplifies setting up a web app to handle GitHub repo hooks.
+Captain Hook is a collection of tools to aid in setting up a web app to handle GitHub repo hooks.
 
 ## Installation
 
@@ -72,19 +72,19 @@ It's your duty to manage storage of tokens.
 Here's one way you can generate and list tokens:
 
 ```ruby
-require 'captain_hook/client'
+require 'captain_hook/authenticator'
 
 puts "Please enter your username:"
 username = $stdin.gets
 
 # Prompt the user for their password, without displaying it in the terminal
-client = CaptainHook::Client.interactive_build(username)
+authenticator = CaptainHook::Client.interactive_build(username)
 
 # Note for the token (this will be displayed in the user's settings on GitHub)
 note = "Created in my awesome script"
-client.create_authorization(note)
+authenticator.create_authorization(note)
 
-client.authorizations.each do |token|
+authenticator.authorizations.each do |token|
   puts "Token: #{auth.token}\nNote: #{auth.note}\n\n"
 end
 ```

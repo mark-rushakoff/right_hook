@@ -1,6 +1,6 @@
 module CaptainHook
-  # The client provides interactions with GitHub API.
-  class Client
+  # The authenticator provides an interface to retrieving or creating GitHub authorizations.
+  class Authenticator
     class << self
       # Build a client with a username and an explicit password.
       def build(username, password)
