@@ -12,6 +12,7 @@ module RightHook
       # Prompt the user for their password (without displaying the entered keys).
       # This approach is offered for convenience to make it easier to not store passwords on disk.
       def interactive_build(username)
+        require 'io/console'
         new(Octokit::Client.new(login: username, password: $stdin.noecho(&:gets).chomp))
       end
     end
