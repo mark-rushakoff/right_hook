@@ -22,18 +22,6 @@ Or install it yourself as:
 
 ## Usage
 
-### GitHub Authentication
-
-To create hooks on GitHub repositories, you need to be authenticated as a collaborator on that repository.
-GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Captain Hook to set up custom hooks.
-
-Captain Hook never stores your password.
-He always uses OAuth tokens.
-The only time he asks for your password is when he is creating a new token or listing existing tokens.
-
-Captain Hook doesn't store your tokens, either.
-It's your duty to manage storage of tokens.
-
 ### Your App
 
 Create an application by subclassing `CaptainHook::App`:
@@ -45,7 +33,7 @@ require 'captain_hook/app'
 class MyApp < CaptainHook::App
   # You must supply a secret for each repository and hook.
   # The secret should only be known by GitHub; that's how we know the request is coming from GitHub's servers.
-  # (You'll specify that secret when you go through subscription, in the next section.)
+  # (You'll specify that secret when you go through subscription.)
   def secret(owner, repo_name, event_type)
     if owner == 'octocat' && repo_name == 'Spoon-Fork' && event_type == 'pull_request'
       'qwertyuiop'
@@ -69,13 +57,45 @@ end
 
 You'll need to host your app online and hold on to the base URL so you can subscribe to hooks.
 
+### GitHub Authentication
+
+To create hooks on GitHub repositories, you need to be authenticated as a collaborator on that repository.
+GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Captain Hook to set up custom hooks.
+
+Captain Hook never stores your password.
+He always uses OAuth tokens.
+The only time he asks for your password is when he is creating a new token or listing existing tokens.
+
+Captain Hook doesn't store your tokens, either.
+It's your duty to manage storage of tokens.
+
+Here's one way you can generate and list tokens:
+
+```ruby
+require 'captain_hook/client'
+
+puts "Please enter your username:"
+username = $stdin.gets
+
+# Prompt the user for their password, without displaying it in the terminal
+client = CaptainHook::Client.interactive_build(username)
+
+# Note for the token (this will be displayed in the user's settings on GitHub)
+note = "Created in my awesome script"
+client.create_authorization(note)
+
+client.authorizations.each do |token|
+  puts "Token: #{auth.token}\nNote: #{auth.note}\n\n"
+end
+```
+
 ### Subscribing to Hooks
 
 Captain Hook provides a way to subscribe to hooks.
 It's easy!
 
 ```ruby
-require 'captain_hook'
+require 'captain_hook/subscriber'
 
 default_opts = {
   base_url: "http://captain-hook.example.com",
@@ -89,13 +109,6 @@ subscriber.subscribe(
   repo_name: 'Hello-World',
   event_type: 'pull_request',
   secret: 'secret_for_hello_world'
-)
-
-subscriber.subscribe(
-  owner: 'octocat',
-  repo_name: 'Spoon-Knife',
-  event_type: 'issue',
-  secret: 'secret_for_spoon_knife'
 )
 ```
 

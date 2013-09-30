@@ -27,4 +27,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "sinatra", "~> 1.4"
   spec.add_runtime_dependency "httparty", "~> 0.11.0"
+  spec.add_runtime_dependency "octokit", "~> 2.2"
 end
