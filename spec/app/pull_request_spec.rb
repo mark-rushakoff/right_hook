@@ -10,7 +10,7 @@ describe CaptainHook::App do
         attr_accessor :owner, :repo_name, :action, :number, :pull_request_json
       end
 
-      def on_pull_request(owner, repo_name, action, number, pull_request_json)
+      def on_pull_request(owner, repo_name, number, action, pull_request_json)
         self.class.owner = owner
         self.class.repo_name = repo_name
         self.class.action = action

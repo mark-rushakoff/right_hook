@@ -22,7 +22,7 @@ module CaptainHook
       json = JSON.parse(content)
       case event_type
       when 'pull_request'
-        on_pull_request(owner, repo_name, json['action'], json['number'], json['pull_request'])
+        on_pull_request(owner, repo_name, json['number'], json['action'], json['pull_request'])
       when 'issue'
         on_issue(owner, repo_name, json['action'], json['issue'])
       else
