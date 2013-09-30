@@ -1,3 +1,5 @@
+require 'logger'
+
 module RightHook
   class << self
     def logger
