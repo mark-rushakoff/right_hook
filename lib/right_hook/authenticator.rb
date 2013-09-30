@@ -25,12 +25,22 @@ module RightHook
     # Create a new GitHub authorization with the given note.
     # If one already exists with that note, it will not create a duplicate.
     def create_authorization(note)
-      _client.create_authorization(scopes: %w(repo), note: note, idempotent: true).token
+      _client.create_authorization(scopes: %w(repo), note: note).token
     end
 
     # Returns an array of all of the authorizations for the authenticated account.
     def list_authorizations
       _client.list_authorizations
+    end
+
+    # If there is already an authorization by this note, use it; otherwise create it
+    def find_or_create_authorization_by_note(note)
+      found_auth = list_authorizations.find {|auth| auth.note == note}
+      if found_auth
+        found_auth.token
+      else
+        create_authorization(note)
+      end
     end
 
     private
