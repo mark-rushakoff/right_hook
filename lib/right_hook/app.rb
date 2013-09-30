@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require 'json'
 
+require 'right_hook/event'
+
 module RightHook
   class App < Sinatra::Base
     post '/hook/:owner/:repo_name/:event_type' do
