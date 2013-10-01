@@ -86,7 +86,7 @@ authenticator = RightHook::Client.interactive_build(username)
 
 # Note for the token (this will be displayed in the user's settings on GitHub)
 note = "Created in my awesome script"
-authenticator.create_authorization(note)
+authenticator.find_or_create_authorization_by_note(note)
 
 authenticator.authorizations.each do |token|
   puts "Token: #{auth.token}\nNote: #{auth.note}\n\n"
