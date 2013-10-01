@@ -13,6 +13,7 @@ module RightHook
       # This approach is offered for convenience to make it easier to not store passwords on disk.
       def interactive_build(username)
         require 'io/console'
+        puts "What is the password for #{username}? (Your typing will be hidden.)"
         new(Octokit::Client.new(login: username, password: $stdin.noecho(&:gets).chomp))
       end
     end
