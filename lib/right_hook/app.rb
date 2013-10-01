@@ -16,7 +16,7 @@ module RightHook
 
       require_valid_signature(content, owner, repo_name, event_type)
 
-      json = JSON.parse(content)
+      json = JSON.parse(params['payload'])
       case event_type
       when Event::PULL_REQUEST
         on_pull_request(owner, repo_name, json['number'], json['action'], json['pull_request'])

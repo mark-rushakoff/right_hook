@@ -31,7 +31,9 @@ describe RightHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/hook/mark-rushakoff/right_hook/issue', ISSUE_JSON, generate_secret_header('issue', ISSUE_JSON)
+      post '/ignore', {payload: ISSUE_JSON}
+      body = last_request.body.read
+      post '/hook/mark-rushakoff/right_hook/issue', {payload: ISSUE_JSON}, generate_secret_header('issue', body)
       expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
       expect(app.repo_name).to eq('right_hook')
@@ -42,7 +44,7 @@ describe RightHook::App do
     end
 
     it 'fails when the secret is wrong' do
-      post '/hook/mark-rushakoff/right_hook/issue', ISSUE_JSON, generate_secret_header('wrong', ISSUE_JSON)
+      post '/hook/mark-rushakoff/right_hook/issue', {payload: ISSUE_JSON}, generate_secret_header('wrong', 'stuff')
       expect(last_response.status).to eq(202)
       expect(app.owner).to be_nil
     end
