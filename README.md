@@ -3,8 +3,11 @@
 [![Build Status](https://travis-ci.org/mark-rushakoff/right_hook.png?branch=master)](https://travis-ci.org/mark-rushakoff/right_hook)
 [![Code Climate](https://codeclimate.com/github/mark-rushakoff/right_hook.png)](https://codeclimate.com/github/mark-rushakoff/right_hook)
 [![Coverage Status](https://coveralls.io/repos/mark-rushakoff/right_hook/badge.png)](https://coveralls.io/r/mark-rushakoff/right_hook)
+[![Gem Version](https://badge.fury.io/rb/right_hook.png)](http://badge.fury.io/rb/right_hook)
 
 Right Hook is a collection of tools to aid in setting up a web app to handle GitHub repo hooks.
+
+To see some example usage, head over to [right-hook/hookbooks](https://github.com/right-hook/hookbooks).
 
 ## Installation
 
@@ -29,13 +32,14 @@ Create an application by subclassing `RightHook::App`:
 ```ruby
 # app.rb
 require 'right_hook/app'
+require 'right_hook/event'
 
 class MyApp < RightHook::App
   # You must supply a secret for each repository and hook.
   # The secret should only be known by GitHub; that's how we know the request is coming from GitHub's servers.
   # (You'll specify that secret when you go through subscription.)
   def secret(owner, repo_name, event_type)
-    if owner == 'octocat' && repo_name == 'Spoon-Fork' && event_type == 'pull_request'
+    if owner == 'octocat' && repo_name == 'Spoon-Fork' && event_type == RightHook::Event::PULL_REQUEST
       'qwertyuiop'
     else
       raise 'unrecognized!'
@@ -62,12 +66,12 @@ You'll need to host your app online and hold on to the base URL so you can subsc
 To create hooks on GitHub repositories, you need to be authenticated as a collaborator on that repository.
 GitHub's UI currently only supports configuring push hooks, so you'll want to authenticate through Right Hook to set up custom hooks.
 
-Right Hook never stores your password.
-He always uses OAuth tokens.
-The only time he asks for your password is when he is creating a new token or listing existing tokens.
+Right Hook never stores your password; instead, it always uses OAuth tokens.
+The only time it asks for your password is when it is creating a new token or listing existing tokens.
 
 Right Hook doesn't store your tokens, either.
 It's your duty to manage storage of tokens.
+Typically, tokens and other secret values are stored as environment variables for your app, rather than in a flat file or in a database.
 
 Here's one way you can generate and list tokens:
 
@@ -91,7 +95,7 @@ end
 
 ### Subscribing to Hooks
 
-Right Hook provides a way to subscribe to hooks.
+Right Hook provides a way to tell GitHub you want to subscribe your Right Hook application to GitHub's hooks.
 It's easy!
 
 ```ruby
@@ -113,6 +117,18 @@ subscriber.subscribe(
 ```
 
 (For more details, consult the RDoc documentation.)
+
+## License
+
+Available under the terms of the MIT license.
+See [license.txt](license.txt) for details.
+
+## Help
+
+Is any documentation unclear?
+Did you expect that Right Hook was going to help you in a particular way, and then it didn't?
+Please open an issue!
+One of the best ways to improve open source software is to make your needs known.
 
 ## Contributing
 

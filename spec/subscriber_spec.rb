@@ -6,7 +6,7 @@ describe RightHook::Subscriber do
       oauth_token: 'my_token',
       owner: 'mark-rushakoff',
       base_url: 'http://example.com',
-      event_type: 'issue',
+      event_type: RightHook::Event::ISSUE,
     )
   end
 
@@ -48,7 +48,7 @@ describe RightHook::Subscriber do
           oauth_token: 'my_token',
           owner: 'mark-rushakoff',
           base_url: 'http://example.com',
-          event_type: 'issue'
+          event_type: RightHook::Event::ISSUE
         )
         expect(result).to eq(true)
 
