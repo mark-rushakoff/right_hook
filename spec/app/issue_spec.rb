@@ -1,10 +1,7 @@
 require 'spec_helper'
-require 'rack/test'
 
 describe RightHook::App do
   describe 'Issues' do
-    include Rack::Test::Methods
-
     class IssueApp < RightHook::App
       class << self
         attr_accessor :owner, :repo_name, :action, :issue_json
@@ -31,9 +28,7 @@ describe RightHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/ignore', {payload: ISSUE_JSON}
-      body = last_request.body.read
-      post '/hook/mark-rushakoff/right_hook/issue', {payload: ISSUE_JSON}, generate_secret_header('issue', body)
+      post_with_signature(path: '/hook/mark-rushakoff/right_hook/issue', payload: ISSUE_JSON, secret: 'issue')
       expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
       expect(app.repo_name).to eq('right_hook')
@@ -44,7 +39,7 @@ describe RightHook::App do
     end
 
     it 'fails when the secret is wrong' do
-      post '/hook/mark-rushakoff/right_hook/issue', {payload: ISSUE_JSON}, generate_secret_header('wrong', 'stuff')
+      post_with_signature(path: '/hook/mark-rushakoff/right_hook/issue', payload: ISSUE_JSON, secret: 'wrong')
       expect(last_response.status).to eq(202)
       expect(app.owner).to be_nil
     end

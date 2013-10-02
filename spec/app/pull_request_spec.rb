@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'rack/test'
 
 describe RightHook::App do
   describe 'Pull requests' do
@@ -32,9 +31,7 @@ describe RightHook::App do
     end
 
     it 'captures the interesting data' do
-      post '/ignore', {payload: PULL_REQUEST_JSON}
-      body = last_request.body.read
-      post '/hook/mark-rushakoff/right_hook/pull_request', {payload: PULL_REQUEST_JSON}, generate_secret_header('pull_request', body)
+      post_with_signature(path: '/hook/mark-rushakoff/right_hook/pull_request', payload: PULL_REQUEST_JSON, secret: 'pull_request')
       expect(last_response.status).to eq(200)
       expect(app.owner).to eq('mark-rushakoff')
       expect(app.repo_name).to eq('right_hook')
@@ -46,7 +43,7 @@ describe RightHook::App do
     end
 
     it 'fails when the secret is wrong' do
-      post '/hook/mark-rushakoff/right_hook/pull_request', {payload: PULL_REQUEST_JSON}, generate_secret_header('wrong', 'stuff')
+      post_with_signature(path: '/hook/mark-rushakoff/right_hook/pull_request', payload: PULL_REQUEST_JSON, secret: 'wrong')
       expect(last_response.status).to eq(202)
       expect(app.owner).to be_nil
     end
