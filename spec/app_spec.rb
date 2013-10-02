@@ -23,4 +23,8 @@ describe RightHook::App do
     post '/hook/mark-rushakoff/right_hook/foobar', '{}', generate_secret_header('secret', '{}')
     expect(last_response.status).to eq(404)
   end
+
+  it 'raises NotImplementedError for an unimplemented secret' do
+    expect { RightHook::App.new!.secret('owner', 'repo', 'issue') }.to raise_error(NotImplementedError)
+  end
 end

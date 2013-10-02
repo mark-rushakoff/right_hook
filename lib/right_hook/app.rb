@@ -4,6 +4,8 @@ require 'json'
 require 'right_hook/event'
 
 module RightHook
+  # Inherit from this class and implement the on_issue, on_pull_request, etc. methods to
+  # configure how you respond to GitHub hooks.
   class App < Sinatra::Base
     post '/hook/:owner/:repo_name/:event_type' do
       owner = params[:owner]
@@ -25,6 +27,11 @@ module RightHook
       else
         halt 500, "Server bug"
       end
+    end
+
+    # It is up to you to override secret to determine how to look up the correct secret for an owner/repo combo.
+    def secret(owner, repo_name, event_type)
+      raise NotImplementedError, "You didn't specify how to find the secret for a repo!"
     end
 
     private
