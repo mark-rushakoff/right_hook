@@ -27,6 +27,8 @@ module RightHook
       else
         halt 500, "Server bug"
       end
+
+      200
     end
 
     # It is up to you to override secret to determine how to look up the correct secret for an owner/repo combo.
@@ -45,5 +47,13 @@ module RightHook
       calculated_signature = "sha1=#{expected_signature}"
       halt 202, "Signature mismatch" unless received_signature == calculated_signature
     end
+  end
+
+  # Use this class if you're getting a mysterious 500 error in a test and you want to see what went wrong.
+  # Don't use it in production.
+  class DebugApp < App
+    disable :show_exceptions
+    disable :dump_errors
+    enable :raise_errors
   end
 end
