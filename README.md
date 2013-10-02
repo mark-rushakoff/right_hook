@@ -9,6 +9,8 @@ Right Hook is a collection of tools to aid in setting up a web app to handle Git
 
 To see some example usage, head over to [right-hook/hookbooks](https://github.com/right-hook/hookbooks).
 
+To see the documentation for the current version of the gem, visit [rubydoc.info](http://rubydoc.info/gems/right_hook).
+
 ## Installation
 
 Add this line to your application's Gemfile:
