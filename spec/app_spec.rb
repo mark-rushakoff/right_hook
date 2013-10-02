@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RightHook::App do
-  class BareApp < RightHook::DebugApp
+  class BareApp < RightHook::App
     def secret(owner, repo_name, event_type)
       'secret'
     end
