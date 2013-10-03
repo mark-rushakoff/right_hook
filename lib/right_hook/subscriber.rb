@@ -44,6 +44,30 @@ module RightHook
       hub_request_with_mode('unsubscribe', opts)
     end
 
+    # Subscribe directly to a fixed URL, rather than a calculated URL for an instance of {RightHook::App}.
+    # @param [Hash] opts Subscription options. Defaults to attr_reader methods when such methods exist.
+    # @option opts [String] :owner The owner of the repository
+    # @option opts [String] :repo_name The name of the repository
+    # @option opts [String] :event_type A constant under RightHook::Event representing an event type
+    # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
+    # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
+    # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    def subscribe_direct(opts)
+      direct_hub_request_with_mode('subscribe', opts)
+    end
+
+    # Unsubscribe directly to a fixed URL, rather than a calculated URL for an instance of {RightHook::App}.
+    # @param [Hash] opts Subscription options. Defaults to attr_reader methods when such methods exist.
+    # @option opts [String] :owner The owner of the repository
+    # @option opts [String] :repo_name The name of the repository
+    # @option opts [String] :event_type A constant under RightHook::Event representing an event type
+    # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
+    # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
+    # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    def unsubscribe_direct(opts)
+      direct_hub_request_with_mode('unsubscribe', opts)
+    end
+
     private
     def hub_request_with_mode(mode, opts)
       repo_name = opts.fetch(:repo_name) # explicitly not defaulted
@@ -67,6 +91,32 @@ module RightHook
       )
 
       RightHook.logger.warn("Failure modifying subscription: #{response.inspect}") unless response.success?
+
+      response.success?
+    end
+
+    def direct_hub_request_with_mode(mode, opts)
+      repo_name = opts.fetch(:repo_name) # explicitly not defaulted
+      url = opts.fetch(:url) # explicitly not defaulted
+      secret = opts.fetch(:secret, nil)
+      owner = opts.fetch(:owner) { self.owner }
+      oauth_token = opts.fetch(:oauth_token) { self.oauth_token }
+      event_type = opts.fetch(:event_type) { self.event_type }
+
+      response = HTTParty.post('https://api.github.com/hub',
+        headers: {
+          # http://developer.github.com/v3/#authentication
+          'Authorization' => "token #{oauth_token}"
+        },
+        body: {
+        'hub.mode' => mode,
+        'hub.topic' => "https://github.com/#{owner}/#{repo_name}/events/#{Event.github_name(event_type)}",
+        'hub.callback' => url,
+        'hub.secret' => secret,
+        },
+      )
+
+      RightHook.logger.warn("Failure modifying direct subscription: #{response.inspect}") unless response.success?
 
       response.success?
     end
