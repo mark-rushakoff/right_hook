@@ -126,9 +126,7 @@ module RightHook
         },
       )
 
-      RightHook.logger.warn("Failure modifying direct subscription: #{response.inspect}") unless response.success?
-
-      response.success?
+      raise "Failure modifying direct subscription: #{response.inspect}" unless response.success?
     end
   end
 end
