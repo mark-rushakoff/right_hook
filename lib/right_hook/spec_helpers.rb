@@ -1,10 +1,13 @@
 require 'openssl'
 require 'uri'
+require 'rack/test'
 
 module RightHook
   # Helpers for specs!
   # Typical usage is to include this module into your spec context, just like you would with Rack::Test::Methods.
   module SpecHelpers
+    include Rack::Test::Methods
+
     # Post to the given path, including the correct signature header based on the payload and secret.
     # @param [Hash] opts The options to use when crafting the request.
     # @option opts [String] :path The full path of the endpoint to which to post

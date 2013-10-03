@@ -2,8 +2,6 @@ require 'spec_helper'
 
 describe RightHook::App do
   describe 'Pull requests' do
-    include Rack::Test::Methods
-
     class PullRequestApp < RightHook::App
       class << self
         attr_accessor :owner, :repo_name, :action, :number, :pull_request_json
