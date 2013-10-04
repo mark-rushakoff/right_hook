@@ -4,14 +4,13 @@ describe RightHook::App do
   describe 'Pull requests' do
     class PullRequestApp < RightHook::App
       class << self
-        attr_accessor :owner, :repo_name, :action, :number, :pull_request_json
+        attr_accessor :owner, :repo_name, :action, :pull_request_json
       end
 
-      def on_pull_request(owner, repo_name, number, action, pull_request_json)
+      def on_pull_request(owner, repo_name, action, pull_request_json)
         self.class.owner = owner
         self.class.repo_name = repo_name
         self.class.action = action
-        self.class.number = number
         self.class.pull_request_json = pull_request_json
       end
 
@@ -25,7 +24,7 @@ describe RightHook::App do
     end
 
     before do
-      app.owner = app.repo_name = app.action = app.number = app.pull_request_json = nil
+      app.owner = app.repo_name = app.action = app.pull_request_json = nil
     end
 
     it 'captures the interesting data' do
@@ -34,7 +33,6 @@ describe RightHook::App do
       expect(app.owner).to eq('mark-rushakoff')
       expect(app.repo_name).to eq('right_hook')
       expect(app.action).to eq('opened')
-      expect(app.number).to eq(1)
 
       # if it has one key it probably has them all
       expect(app.pull_request_json['body']).to eq('Please pull these awesome changes')

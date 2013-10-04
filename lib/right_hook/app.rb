@@ -21,7 +21,7 @@ module RightHook
       json = JSON.parse(params['payload'])
       case event_type
       when Event::PULL_REQUEST
-        on_pull_request(owner, repo_name, json['number'], json['action'], json['pull_request'])
+        on_pull_request(owner, repo_name, json['action'], json['pull_request'])
       when Event::ISSUE
         on_issue(owner, repo_name, json['action'], json['issue'])
       else
