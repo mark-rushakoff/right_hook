@@ -32,6 +32,7 @@ Or install it yourself as:
 Create an application by subclassing `RightHook::App`:
 
 ```ruby
+#!/usr/bin/env ruby
 # app.rb
 require 'right_hook/app'
 require 'right_hook/event'
@@ -78,6 +79,7 @@ Typically, tokens and other secret values are stored as environment variables fo
 Here's one way you can generate and list tokens:
 
 ```ruby
+#!/usr/bin/env ruby
 require 'right_hook/authenticator'
 
 puts "Please enter your username:"
@@ -101,6 +103,7 @@ Right Hook provides a way to tell GitHub you want to subscribe your Right Hook a
 It's easy!
 
 ```ruby
+#!/usr/bin/env ruby
 require 'right_hook/subscriber'
 
 default_opts = {
