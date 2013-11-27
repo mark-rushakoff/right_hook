@@ -23,6 +23,10 @@ module RightHook
     # See http://developer.github.com/v3/repos/hooks/ for a complete list of valid types.
     attr_accessor :event_type
 
+    # The user agent value to send on the request to github
+    # See: http://developer.github.com/v3/#user-agent-required
+    attr_accessor :user_agent
+
     # Initialize takes options which will be used as default values in other methods.
     # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, and +event_type+].
     # @param [Hash] opts Subscription options. Defaults to attr_reader methods when such methods exist.
@@ -37,6 +41,7 @@ module RightHook
       @oauth_token = default_opts[:oauth_token]
       @owner = default_opts[:owner]
       @event_type = default_opts[:event_type]
+      @user_agent = default_opts[:user_agent]
     end
 
     # Subscribe an instance of {RightHook::App} hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
@@ -112,11 +117,13 @@ module RightHook
       owner = opts.fetch(:owner) { self.owner }
       oauth_token = opts.fetch(:oauth_token) { self.oauth_token }
       event_type = opts.fetch(:event_type) { self.event_type }
+      user_agent = opts.fetch(:user_agent) { self.user_agent }
 
       response = HTTParty.post('https://api.github.com/hub',
         headers: {
           # http://developer.github.com/v3/#authentication
-          'Authorization' => "token #{oauth_token}"
+          'Authorization' => "token #{oauth_token}",
+          'User-Agent' => user_agent.to_s
         },
         body: {
         'hub.mode' => mode,

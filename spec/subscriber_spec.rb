@@ -7,6 +7,7 @@ describe RightHook::Subscriber do
       owner: 'mark-rushakoff',
       base_url: 'http://example.com',
       event_type: RightHook::Event::ISSUE,
+      user_agent: 'My-User-Agent',
     )
   end
 
@@ -14,7 +15,7 @@ describe RightHook::Subscriber do
     let!(:stubbed_request) do
       stub_request(:post, 'https://api.github.com/hub').
         with(:body => 'hub.mode=subscribe&hub.topic=https%3A%2F%2Fgithub.com%2Fmark-rushakoff%2Fright_hook%2Fevents%2Fissues&hub.callback=http%3A%2F%2Fexample.com%2Fhook%2Fmark-rushakoff%2Fright_hook%2Fissue&hub.secret=the-secret',
-             :headers => {'Authorization' => 'token my_token'}
+             :headers => {'Authorization' => 'token my_token', 'User-Agent' => 'My-User-Agent'}
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
@@ -50,7 +51,8 @@ describe RightHook::Subscriber do
             oauth_token: 'my_token',
             owner: 'mark-rushakoff',
             base_url: 'http://example.com',
-            event_type: RightHook::Event::ISSUE
+            event_type: RightHook::Event::ISSUE,
+            user_agent: 'My-User-Agent',
           )
         }.not_to raise_error
 
@@ -63,7 +65,7 @@ describe RightHook::Subscriber do
     let!(:stubbed_request) do
       stub_request(:post, 'https://api.github.com/hub').
         with(:body => 'hub.mode=subscribe&hub.topic=https%3A%2F%2Fgithub.com%2Fmark-rushakoff%2Fright_hook%2Fevents%2Fissues&hub.callback=http%3A%2F%2Fhook.example.com&hub.secret=the-secret',
-             :headers => {'Authorization' => 'token my_token'}
+             :headers => {'Authorization' => 'token my_token', 'User-Agent' => 'My-User-Agent'}
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
@@ -100,6 +102,7 @@ describe RightHook::Subscriber do
             url: 'http://hook.example.com',
             secret: 'the-secret',
             oauth_token: 'my_token',
+            user_agent: 'My-User-Agent',
           )
         }.not_to raise_error
 
@@ -112,7 +115,7 @@ describe RightHook::Subscriber do
     let!(:stubbed_request) do
       stub_request(:post, 'https://api.github.com/hub').
         with(:body => 'hub.mode=unsubscribe&hub.topic=https%3A%2F%2Fgithub.com%2Fmark-rushakoff%2Fright_hook%2Fevents%2Fissues&hub.callback=http%3A%2F%2Fexample.com%2Fhook%2Fmark-rushakoff%2Fright_hook%2Fissue&hub.secret=the-secret',
-             :headers => {'Authorization' => 'token my_token'}
+             :headers => {'Authorization' => 'token my_token', 'User-Agent' => 'My-User-Agent'}
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
@@ -144,7 +147,7 @@ describe RightHook::Subscriber do
     let!(:stubbed_request) do
       stub_request(:post, 'https://api.github.com/hub').
         with(:body => 'hub.mode=unsubscribe&hub.topic=https%3A%2F%2Fgithub.com%2Fmark-rushakoff%2Fright_hook%2Fevents%2Fissues&hub.callback=http%3A%2F%2Fhook.example.com&hub.secret=the-secret',
-             :headers => {'Authorization' => 'token my_token'}
+             :headers => {'Authorization' => 'token my_token', 'User-Agent' => 'My-User-Agent'}
             ).to_return(:status => status_code, :body => '', :headers => {})
     end
 
@@ -181,6 +184,7 @@ describe RightHook::Subscriber do
             url: 'http://hook.example.com',
             secret: 'the-secret',
             oauth_token: 'my_token',
+            user_agent: 'My-User-Agent',
           )
         }.not_to raise_error
 
