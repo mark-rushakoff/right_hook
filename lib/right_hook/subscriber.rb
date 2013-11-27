@@ -28,13 +28,14 @@ module RightHook
     attr_accessor :user_agent
 
     # Initialize takes options which will be used as default values in other methods.
-    # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, and +event_type+].
+    # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, +event_type+, and +user_agent+].
     # @param [Hash] opts Subscription options. Defaults to attr_reader methods when such methods exist.
     # @option opts [String] :owner The owner of the repository
     # @option opts [String] :event_type A constant under RightHook::Event representing an event type
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def initialize(default_opts = {})
       @base_url = default_opts[:base_url]
       @url = default_opts[:url]
@@ -54,6 +55,7 @@ module RightHook
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def subscribe(opts)
       hub_request_with_mode('subscribe', opts)
     end
@@ -69,6 +71,7 @@ module RightHook
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def unsubscribe(opts)
       hub_request_with_mode('unsubscribe', opts)
     end
@@ -82,6 +85,7 @@ module RightHook
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def subscribe_direct(opts)
       direct_hub_request_with_mode('subscribe', opts)
     end
@@ -95,6 +99,7 @@ module RightHook
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def unsubscribe_direct(opts)
       direct_hub_request_with_mode('unsubscribe', opts)
     end
