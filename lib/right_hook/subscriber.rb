@@ -23,20 +23,26 @@ module RightHook
     # See http://developer.github.com/v3/repos/hooks/ for a complete list of valid types.
     attr_accessor :event_type
 
+    # The user agent value to send on the request to github
+    # See: http://developer.github.com/v3/#user-agent-required
+    attr_accessor :user_agent
+
     # Initialize takes options which will be used as default values in other methods.
-    # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, and +event_type+].
+    # The valid keys in the options are [+base_url+, +oauth_token+, +owner+, +event_type+, and +user_agent+].
     # @param [Hash] opts Subscription options. Defaults to attr_reader methods when such methods exist.
     # @option opts [String] :owner The owner of the repository
     # @option opts [String] :event_type A constant under RightHook::Event representing an event type
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def initialize(default_opts = {})
       @base_url = default_opts[:base_url]
       @url = default_opts[:url]
       @oauth_token = default_opts[:oauth_token]
       @owner = default_opts[:owner]
       @event_type = default_opts[:event_type]
+      @user_agent = default_opts[:user_agent]
     end
 
     # Subscribe an instance of {RightHook::App} hosted at +base_url+ to a hook for +owner+/+repo_name+, authenticating with +oauth_token+.
@@ -49,6 +55,7 @@ module RightHook
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def subscribe(opts)
       hub_request_with_mode('subscribe', opts)
     end
@@ -64,6 +71,7 @@ module RightHook
     # @option opts [String] :base_url The URL of where the {RightHook::App} is hosted
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def unsubscribe(opts)
       hub_request_with_mode('unsubscribe', opts)
     end
@@ -77,6 +85,7 @@ module RightHook
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def subscribe_direct(opts)
       direct_hub_request_with_mode('subscribe', opts)
     end
@@ -90,6 +99,7 @@ module RightHook
     # @option opts [String] :url The URL to receive requests from GitHub when a hook is activated
     # @option opts [String] :secret The secret to use to validate that a request came from GitHub. May be omitted
     # @option opts [String] :oauth_token The OAuth token to use to authenticate with GitHub when subscribing
+    # @option opts [String] :user_agent The value to send for the User-Agent header when talking with GitHub
     def unsubscribe_direct(opts)
       direct_hub_request_with_mode('unsubscribe', opts)
     end
@@ -112,11 +122,13 @@ module RightHook
       owner = opts.fetch(:owner) { self.owner }
       oauth_token = opts.fetch(:oauth_token) { self.oauth_token }
       event_type = opts.fetch(:event_type) { self.event_type }
+      user_agent = opts.fetch(:user_agent) { self.user_agent }
 
       response = HTTParty.post('https://api.github.com/hub',
         headers: {
           # http://developer.github.com/v3/#authentication
-          'Authorization' => "token #{oauth_token}"
+          'Authorization' => "token #{oauth_token}",
+          'User-Agent' => user_agent.to_s
         },
         body: {
         'hub.mode' => mode,
