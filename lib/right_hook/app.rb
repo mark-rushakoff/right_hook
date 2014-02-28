@@ -24,6 +24,8 @@ module RightHook
         on_pull_request(owner, repo_name, json['action'], json['pull_request'])
       when Event::ISSUE
         on_issue(owner, repo_name, json['action'], json['issue'])
+      when Event::ISSUE_COMMENT
+        on_issue_comment(owner, repo_name, json['issue'], json['comment'])
       else
         halt 500, "Server bug"
       end
