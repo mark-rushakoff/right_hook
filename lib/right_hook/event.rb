@@ -18,6 +18,7 @@ module RightHook
     ISSUE = 'issue'.freeze
     PULL_REQUEST = 'pull_request'.freeze
     ISSUE_COMMENT = 'issue_comment'.freeze
+    PING = 'ping'.freeze
 
     KNOWN_TYPES = [
       ISSUE,

@@ -16,6 +16,8 @@ module RightHook
       halt 404, "Unknown event type" unless Event::KNOWN_TYPES.include?(event_type)
       halt 501, "Event type not implemented" unless respond_to?("on_#{event_type}")
 
+      return 200 if request.env['HTTP_X_GITHUB_EVENT'] == Event::PING
+
       require_valid_signature(content, owner, repo_name, event_type)
 
       json = JSON.parse(params['payload'])
@@ -39,6 +41,7 @@ module RightHook
     end
 
     private
+
     def require_valid_signature(content, owner, repo_name, event_type)
       s = secret(owner, repo_name, event_type)
       expected_signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::Digest.new('sha1'), s, content)

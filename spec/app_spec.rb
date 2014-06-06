@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RightHook::App do
-  class BareApp < RightHook::App
+  class BareApp < RightHook::DebugApp
     def secret(owner, repo_name, event_type)
       'secret'
     end
@@ -25,7 +25,7 @@ describe RightHook::App do
     expect { RightHook::App.new!.secret('owner', 'repo', 'issue') }.to raise_error(NotImplementedError)
   end
 
-  describe 'the status of a request' do
+  describe 'when an app implements the hook method' do
     class WeirdApp < BareApp
       def on_issue(owner, repo_name, action, issue_json)
         302
@@ -34,11 +34,25 @@ describe RightHook::App do
 
     let(:app) { WeirdApp }
 
-    it 'is 200 regardless of what the hook method returns' do
-      payload =  '{}'
-      WeirdApp.any_instance.should_receive(:on_issue).and_call_original
+    let(:payload) { '{}' }
+
+    it 'responds with a 200 regardless of what the hook method returns' do
+      expect_any_instance_of(WeirdApp).to receive(:on_issue).and_call_original
+
       post_with_signature(path: '/hook/mark-rushakoff/right_hook/issue', payload: payload, secret: 'secret')
       expect(last_response.status).to eq(200)
+    end
+
+    it 'does not call the hook method when a ping event is received' do
+      expect_any_instance_of(WeirdApp).not_to receive(:on_issue)
+
+      post(
+        '/hook/mark-rushakoff/right_hook/issue',
+        {payload: payload},
+        generate_secret_header('secret', URI.encode_www_form(payload: payload)).merge(
+          'HTTP_X_GITHUB_EVENT' => 'ping'
+        ),
+      )
     end
   end
 end
